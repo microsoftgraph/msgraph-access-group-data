@@ -1,0 +1,1 @@
+# msgraph-access-group-data
