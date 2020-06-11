@@ -1,4 +1,7 @@
-﻿using System;
+﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT license.
+
+using System;
 using System.Collections.Generic;
 using System.Security;
 using Microsoft.Identity.Client;
@@ -7,7 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Helpers;
 using System.Threading.Tasks;
 
-namespace graphgroups01
+namespace graphconsoleapp
 {
   class Program
   {
@@ -39,6 +42,7 @@ namespace graphgroups01
                                       .Select("Id")
                                       .Filter("MailNickname eq 'myfirstgroup01'");
       var resultGroup = requestGroup.GetAsync().Result;
+
       // teamify group
       // var teamifiedGroup = TeamifyGroupAsync(client, resultGroup[0].Id);
       // teamifiedGroup.Wait();
@@ -47,29 +51,11 @@ namespace graphgroups01
       // request 3: delete group
       var deleteTask = DeleteTeamAsync(client, resultGroup[0].Id);
       deleteTask.Wait();
-      Console.WriteLine("Group deleted!");
     }
 
-    private static async Task<Microsoft.Graph.Group> CreateGroupAsync(GraphServiceClient client)
+    private static async Task DeleteTeamAsync(GraphServiceClient client, string groupIdToDelete)
     {
-      // create object to define members & owners as 'additionalData'
-      var additionalData = new Dictionary<string, object>();
-      additionalData.Add("owners@odata.bind", new string[] { "https://graph.microsoft.com/v1.0/users/d280a087-e05b-4c23-b073-738cdb82b25e" });
-      additionalData.Add("members@odata.bind", new string[] { "https://graph.microsoft.com/v1.0/users/70c095fe-df9d-4250-867d-f298e237d681", "https://graph.microsoft.com/v1.0/users/8c2da469-1eba-47a4-9322-ee0ddd24d99a" });
-
-      var group = new Microsoft.Graph.Group
-      {
-        AdditionalData = additionalData,
-        Description = "My first group created with the Microsoft Graph .NET SDK",
-        DisplayName = "My First Group",
-        GroupTypes = new List<String>() { "Unified" },
-        MailEnabled = true,
-        MailNickname = "myfirstgroup01",
-        SecurityEnabled = false
-      };
-
-      var requestNewGroup = client.Groups.Request();
-      return await requestNewGroup.AddAsync(group);
+      await client.Groups[groupIdToDelete].Request().DeleteAsync();
     }
 
     private static async Task<Microsoft.Graph.Team> TeamifyGroupAsync(GraphServiceClient client, string groupId)
@@ -94,8 +80,59 @@ namespace graphgroups01
       return await requestTeamifiedGroup.PutAsync(team);
     }
 
-    private static async Task DeleteTeamAsync(GraphServiceClient client, string groupIdToDelete) {
-      await client.Groups[groupIdToDelete].Request().DeleteAsync();
+    private static async Task<Microsoft.Graph.Group> CreateGroupAsync(GraphServiceClient client)
+    {
+      // create object to define members & owners as 'additionalData'
+      var additionalData = new Dictionary<string, object>();
+      additionalData.Add("owners@odata.bind",
+        new string[] {
+          "https://graph.microsoft.com/v1.0/users/dac10d32-8615-4a3a-8572-e0fd2fd28939"
+        }
+      );
+      additionalData.Add("members@odata.bind",
+        new string[] {
+          "https://graph.microsoft.com/v1.0/users/851f0875-e1c1-4c7e-bdec-3143bb3d4192",
+          "https://graph.microsoft.com/v1.0/users/97c431bf-2437-4154-acee-6865979eed54",
+          "https://graph.microsoft.com/v1.0/users/3f8f64d5-961f-4067-9f3e-8f5cdcf1b0df"
+        }
+      );
+
+      var group = new Microsoft.Graph.Group
+      {
+        AdditionalData = additionalData,
+        Description = "My first group created with the Microsoft Graph .NET SDK",
+        DisplayName = "My First Group",
+        GroupTypes = new List<String>() { "Unified" },
+        MailEnabled = true,
+        MailNickname = "myfirstgroup01",
+        SecurityEnabled = false
+      };
+
+      var requestNewGroup = client.Groups.Request();
+      return await requestNewGroup.AddAsync(group);
+    }
+
+    private static IConfigurationRoot LoadAppSettings()
+    {
+      try
+      {
+        var config = new ConfigurationBuilder()
+                          .SetBasePath(System.IO.Directory.GetCurrentDirectory())
+                          .AddJsonFile("appsettings.json", false, true)
+                          .Build();
+
+        if (string.IsNullOrEmpty(config["applicationId"]) ||
+            string.IsNullOrEmpty(config["tenantId"]))
+        {
+          return null;
+        }
+
+        return config;
+      }
+      catch (System.IO.FileNotFoundException)
+      {
+        return null;
+      }
     }
 
     private static IAuthenticationProvider CreateAuthorizationProvider(IConfigurationRoot config, string userName, SecureString userPassword)
@@ -120,14 +157,6 @@ namespace graphgroups01
       return graphClient;
     }
 
-    private static string ReadUsername()
-    {
-      string username;
-      Console.WriteLine("Enter your username");
-      username = Console.ReadLine();
-      return username;
-    }
-
     private static SecureString ReadPassword()
     {
       Console.WriteLine("Enter your password");
@@ -146,27 +175,12 @@ namespace graphgroups01
       return password;
     }
 
-    private static IConfigurationRoot LoadAppSettings()
+    private static string ReadUsername()
     {
-      try
-      {
-        var config = new ConfigurationBuilder()
-                          .SetBasePath(System.IO.Directory.GetCurrentDirectory())
-                          .AddJsonFile("appsettings.json", false, true)
-                          .Build();
-
-        if (string.IsNullOrEmpty(config["applicationId"]) ||
-            string.IsNullOrEmpty(config["tenantId"]))
-        {
-          return null;
-        }
-
-        return config;
-      }
-      catch (System.IO.FileNotFoundException)
-      {
-        return null;
-      }
+      string username;
+      Console.WriteLine("Enter your username");
+      username = Console.ReadLine();
+      return username;
     }
   }
 }
