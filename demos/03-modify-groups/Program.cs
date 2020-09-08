@@ -53,9 +53,35 @@ namespace graphconsoleapp
       deleteTask.Wait();
     }
 
-    private static async Task DeleteTeamAsync(GraphServiceClient client, string groupIdToDelete)
+    private static async Task<Microsoft.Graph.Group> CreateGroupAsync(GraphServiceClient client)
     {
-      await client.Groups[groupIdToDelete].Request().DeleteAsync();
+      // create object to define members & owners as 'additionalData'
+      var additionalData = new Dictionary<string, object>();
+      additionalData.Add("owners@odata.bind",
+        new string[] {
+          "https://graph.microsoft.com/v1.0/users/3f8f64d5-961f-4067-9f3e-8f5cdcf1b0df"
+        }
+      );
+      additionalData.Add("members@odata.bind",
+        new string[] {
+          "https://graph.microsoft.com/v1.0/users/851f0875-e1c1-4c7e-bdec-3143bb3d4192",
+          "https://graph.microsoft.com/v1.0/users/97f4b654-3756-4246-9f9f-1588250f2531"
+        }
+      );
+
+      var group = new Microsoft.Graph.Group
+      {
+        AdditionalData = additionalData,
+        Description = "My first group created with the Microsoft Graph .NET SDK",
+        DisplayName = "My First Group",
+        GroupTypes = new List<String>() { "Unified" },
+        MailEnabled = true,
+        MailNickname = "myfirstgroup01",
+        SecurityEnabled = false
+      };
+
+      var requestNewGroup = client.Groups.Request();
+      return await requestNewGroup.AddAsync(group);
     }
 
     private static async Task<Microsoft.Graph.Team> TeamifyGroupAsync(GraphServiceClient client, string groupId)
@@ -80,38 +106,10 @@ namespace graphconsoleapp
       return await requestTeamifiedGroup.PutAsync(team);
     }
 
-    private static async Task<Microsoft.Graph.Group> CreateGroupAsync(GraphServiceClient client)
+    private static async Task DeleteTeamAsync(GraphServiceClient client, string groupIdToDelete)
     {
-      // create object to define members & owners as 'additionalData'
-      var additionalData = new Dictionary<string, object>();
-      additionalData.Add("owners@odata.bind",
-        new string[] {
-          "https://graph.microsoft.com/v1.0/users/dac10d32-8615-4a3a-8572-e0fd2fd28939"
-        }
-      );
-      additionalData.Add("members@odata.bind",
-        new string[] {
-          "https://graph.microsoft.com/v1.0/users/851f0875-e1c1-4c7e-bdec-3143bb3d4192",
-          "https://graph.microsoft.com/v1.0/users/97c431bf-2437-4154-acee-6865979eed54",
-          "https://graph.microsoft.com/v1.0/users/3f8f64d5-961f-4067-9f3e-8f5cdcf1b0df"
-        }
-      );
-
-      var group = new Microsoft.Graph.Group
-      {
-        AdditionalData = additionalData,
-        Description = "My first group created with the Microsoft Graph .NET SDK",
-        DisplayName = "My First Group",
-        GroupTypes = new List<String>() { "Unified" },
-        MailEnabled = true,
-        MailNickname = "myfirstgroup01",
-        SecurityEnabled = false
-      };
-
-      var requestNewGroup = client.Groups.Request();
-      return await requestNewGroup.AddAsync(group);
+      await client.Groups[groupIdToDelete].Request().DeleteAsync();
     }
-
     private static IConfigurationRoot LoadAppSettings()
     {
       try

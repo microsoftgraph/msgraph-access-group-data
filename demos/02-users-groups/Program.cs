@@ -30,33 +30,33 @@ namespace graphconsoleapp
       var client = GetAuthenticatedGraphClient(config, userName, userPassword);
 
       // request 1 - all groups member of
-      Console.WriteLine("\n\nREQUEST 1 - ALL GROUPS MEMBER OF:");
-      var requestGroupsMemberOf = client.Me.MemberOf.Request();
-      var resultsGroupsMemberOf = requestGroupsMemberOf.GetAsync().Result;
+      // Console.WriteLine("\n\nREQUEST 1 - ALL GROUPS MEMBER OF:");
+      // var requestGroupsMemberOf = client.Me.MemberOf.Request();
+      // var resultsGroupsMemberOf = requestGroupsMemberOf.GetAsync().Result;
 
-      foreach (var groupDirectoryObject in resultsGroupsMemberOf)
-      {
-        var group = groupDirectoryObject as Microsoft.Graph.Group;
-        var role = groupDirectoryObject as Microsoft.Graph.DirectoryRole;
-        if (group != null)
-        {
-          Console.WriteLine("Group: " + group.Id + ": " + group.DisplayName);
-        }
-        else if (role != null)
-        {
-          Console.WriteLine("Role: " + role.Id + ": " + role.DisplayName);
-        }
-        else
-        {
-          Console.WriteLine(groupDirectoryObject.ODataType + ": " + groupDirectoryObject.Id);
-        }
-      }
+      // foreach (var groupDirectoryObject in resultsGroupsMemberOf)
+      // {
+      //   var group = groupDirectoryObject as Microsoft.Graph.Group;
+      //   var role = groupDirectoryObject as Microsoft.Graph.DirectoryRole;
+      //   if (group != null)
+      //   {
+      //     Console.WriteLine("Group: " + group.Id + ": " + group.DisplayName);
+      //   }
+      //   else if (role != null)
+      //   {
+      //     Console.WriteLine("Role: " + role.Id + ": " + role.DisplayName);
+      //   }
+      //   else
+      //   {
+      //     Console.WriteLine(groupDirectoryObject.ODataType + ": " + groupDirectoryObject.Id);
+      //   }
+      // }
 
       // request 2 - all groups owner of
       Console.WriteLine("\n\nREQUEST 2 - ALL GROUPS OWNER OF:");
       var requestOwnerOf = client.Me.OwnedObjects.Request();
       var resultsOwnerOf = requestOwnerOf.GetAsync().Result;
-      foreach (var ownedObject in resultsGroupsMemberOf)
+      foreach (var ownedObject in resultsOwnerOf)
       {
         var group = ownedObject as Microsoft.Graph.Group;
         var role = ownedObject as Microsoft.Graph.DirectoryRole;
@@ -108,7 +108,7 @@ namespace graphconsoleapp
 
       List<string> scopes = new List<string>();
       scopes.Add("User.Read");
-      scopes.Add("Group.Read.All");
+      scopes.Add("User.ReadBasic.All");
       scopes.Add("Directory.Read.All");
 
       var cca = PublicClientApplicationBuilder.Create(clientId)
