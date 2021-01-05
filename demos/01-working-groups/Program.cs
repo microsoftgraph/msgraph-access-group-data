@@ -30,40 +30,40 @@ namespace graphconsoleapp
       var client = GetAuthenticatedGraphClient(config, userName, userPassword);
 
       // request 1 - all groups
-      //   Console.WriteLine("\n\nREQUEST 1 - ALL GROUPS:");
-      //   var requestAllGroups = client.Groups.Request();
-      //   var resultsAllGroups = requestAllGroups.GetAsync().Result;
-      //   foreach (var group in resultsAllGroups)
-      //   {
-      //     Console.WriteLine(group.Id + ": " + group.DisplayName + " <" + group.Mail + ">");
-      //   }
+      // Console.WriteLine("\n\nREQUEST 1 - ALL GROUPS:");
+      // var requestAllGroups = client.Groups.Request();
+      // var resultsAllGroups = requestAllGroups.GetAsync().Result;
+      // foreach (var group in resultsAllGroups)
+      // {
+      //   Console.WriteLine(group.Id + ": " + group.DisplayName + " <" + group.Mail + ">");
+      // }
 
-      //   Console.WriteLine("\nGraph Request:");
-      //   Console.WriteLine(requestAllGroups.GetHttpRequestMessage().RequestUri);
+      // Console.WriteLine("\nGraph Request:");
+      // Console.WriteLine(requestAllGroups.GetHttpRequestMessage().RequestUri);
 
-      var groupId = "9e580be7-7313-45df-a926-bc4b2d56a192";
+      var groupId = "c70f8887-a2a4-4835-b702-1f87580f8bac";
 
       // request 2 - one group
-      //   Console.WriteLine("\n\nREQUEST 2 - ONE GROUP:");
-      //   var requestGroup = client.Groups[groupId].Request();
-      //   var resultsGroup = requestGroup.GetAsync().Result;
-      //   Console.WriteLine(resultsGroup.Id + ": " + resultsGroup.DisplayName + " <" + resultsGroup.Mail + ">");
+      // Console.WriteLine("\n\nREQUEST 2 - ONE GROUP:");
+      // var requestGroup = client.Groups[groupId].Request();
+      // var resultsGroup = requestGroup.GetAsync().Result;
+      // Console.WriteLine(resultsGroup.Id + ": " + resultsGroup.DisplayName + " <" + resultsGroup.Mail + ">");
 
-      //   Console.WriteLine("\nGraph Request:");
-      //   Console.WriteLine(requestGroup.GetHttpRequestMessage().RequestUri);
+      // Console.WriteLine("\nGraph Request:");
+      // Console.WriteLine(requestGroup.GetHttpRequestMessage().RequestUri);
 
       // request 3 - group owners
-      //   Console.WriteLine("\n\nREQUEST 3 - GROUP OWNERS:");
-      //   var requestGroupOwners = client.Groups[groupId].Owners.Request();
-      //   var resultsGroupOwners = requestGroupOwners.GetAsync().Result;
-      //   foreach (var owner in resultsGroupOwners)
-      //   {
-      //     var ownerUser = owner as Microsoft.Graph.User;
-      //     Console.WriteLine(ownerUser.Id + ": " + ownerUser.DisplayName + " <" + ownerUser.Mail + ">");
-      //   }
+      // Console.WriteLine("\n\nREQUEST 3 - GROUP OWNERS:");
+      // var requestGroupOwners = client.Groups[groupId].Owners.Request();
+      // var resultsGroupOwners = requestGroupOwners.GetAsync().Result;
+      // foreach (var owner in resultsGroupOwners)
+      // {
+      //   var ownerUser = owner as Microsoft.Graph.User;
+      //   Console.WriteLine(ownerUser.Id + ": " + ownerUser.DisplayName + " <" + ownerUser.Mail + ">");
+      // }
 
-      //   Console.WriteLine("\nGraph Request:");
-      //   Console.WriteLine(requestGroupOwners.GetHttpRequestMessage().RequestUri);
+      // Console.WriteLine("\nGraph Request:");
+      // Console.WriteLine(requestGroupOwners.GetHttpRequestMessage().RequestUri);
 
       // request 4 - group members
       Console.WriteLine("\n\nREQUEST 4 - GROUP MEMBERS:");
