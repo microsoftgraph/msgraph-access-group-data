@@ -91,8 +91,8 @@ namespace graphconsoleapp
       );
       additionalData.Add("members@odata.bind",
         new string[] {
-          "https://graph.microsoft.com/v1.0/users/97c431bf-2437-4154-acee-6865979eed54",
-          "https://graph.microsoft.com/v1.0/users/97f4b654-3756-4246-9f9f-1588250f2531"
+          "https://graph.microsoft.com/v1.0/users/851f0875-e1c1-4c7e-bdec-3143bb3d4192",
+          "https://graph.microsoft.com/v1.0/users/97c431bf-2437-4154-acee-6865979eed54"
         }
       );
 
