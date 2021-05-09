@@ -108,7 +108,7 @@ namespace graphconsoleapp
 
       List<string> scopes = new List<string>();
       scopes.Add("User.Read");
-      scopes.Add("User.ReadBasic.All");
+      scopes.Add("Group.Read.All");
       scopes.Add("Directory.Read.All");
 
       var cca = PublicClientApplicationBuilder.Create(clientId)
