@@ -11,9 +11,9 @@ using Helpers;
 
 namespace graphconsoleapp
 {
-  class Program
+  public class Program
   {
-    static void Main(string[] args)
+    public static void Main(string[] args)
     {
       Console.WriteLine("Hello World!");
 
@@ -78,7 +78,7 @@ namespace graphconsoleapp
       Console.WriteLine(requestOwnerOf.GetHttpRequestMessage().RequestUri);
     }
 
-    private static IConfigurationRoot LoadAppSettings()
+    private static IConfigurationRoot? LoadAppSettings()
     {
       try
       {
@@ -108,7 +108,7 @@ namespace graphconsoleapp
 
       List<string> scopes = new List<string>();
       scopes.Add("User.Read");
-      scopes.Add("User.ReadBasic.All");
+      scopes.Add("Group.Read.All");
       scopes.Add("Directory.Read.All");
 
       var cca = PublicClientApplicationBuilder.Create(clientId)
@@ -144,10 +144,10 @@ namespace graphconsoleapp
 
     private static string ReadUsername()
     {
-      string username;
+      string? username;
       Console.WriteLine("Enter your username");
       username = Console.ReadLine();
-      return username;
+      return username ?? "";
     }
   }
 }

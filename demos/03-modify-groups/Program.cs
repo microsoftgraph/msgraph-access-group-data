@@ -12,9 +12,9 @@ using System.Threading.Tasks;
 
 namespace graphconsoleapp
 {
-  class Program
+  public class Program
   {
-    static void Main(string[] args)
+    public static void Main(string[] args)
     {
       Console.WriteLine("Hello World!");
 
@@ -53,6 +53,33 @@ namespace graphconsoleapp
       deleteTask.Wait();
     }
 
+    private static async Task DeleteTeamAsync(GraphServiceClient client, string groupIdToDelete)
+    {
+      await client.Groups[groupIdToDelete].Request().DeleteAsync();
+    }
+
+    private static async Task<Microsoft.Graph.Team> TeamifyGroupAsync(GraphServiceClient client, string groupId)
+    {
+      var team = new Microsoft.Graph.Team
+      {
+        MemberSettings = new TeamMemberSettings
+        {
+          AllowCreateUpdateChannels = true,
+          ODataType = null
+        },
+        MessagingSettings = new TeamMessagingSettings
+        {
+          AllowUserEditMessages = true,
+          AllowUserDeleteMessages = true,
+          ODataType = null
+        },
+        ODataType = null
+      };
+
+      var requestTeamifiedGroup = client.Groups[groupId].Team.Request();
+      return await requestTeamifiedGroup.PutAsync(team);
+    }
+
     private static async Task<Microsoft.Graph.Group> CreateGroupAsync(GraphServiceClient client)
     {
       // create object to define members & owners as 'additionalData'
@@ -83,35 +110,7 @@ namespace graphconsoleapp
       var requestNewGroup = client.Groups.Request();
       return await requestNewGroup.AddAsync(group);
     }
-
-    private static async Task<Microsoft.Graph.Team> TeamifyGroupAsync(GraphServiceClient client, string groupId)
-    {
-      var team = new Microsoft.Graph.Team
-      {
-        MemberSettings = new TeamMemberSettings
-        {
-          AllowCreateUpdateChannels = true,
-          ODataType = null
-        },
-        MessagingSettings = new TeamMessagingSettings
-        {
-          AllowUserEditMessages = true,
-          AllowUserDeleteMessages = true,
-          ODataType = null
-        },
-        ODataType = null
-      };
-
-      var requestTeamifiedGroup = client.Groups[groupId].Team.Request();
-      return await requestTeamifiedGroup.PutAsync(team);
-    }
-
-    private static async Task DeleteTeamAsync(GraphServiceClient client, string groupIdToDelete)
-    {
-      await client.Groups[groupIdToDelete].Request().DeleteAsync();
-    }
-
-    private static IConfigurationRoot LoadAppSettings()
+    private static IConfigurationRoot? LoadAppSettings()
     {
       try
       {
@@ -176,10 +175,10 @@ namespace graphconsoleapp
 
     private static string ReadUsername()
     {
-      string username;
+      string? username;
       Console.WriteLine("Enter your username");
       username = Console.ReadLine();
-      return username;
+      return username ?? "";
     }
   }
 }
