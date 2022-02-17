@@ -41,7 +41,7 @@ namespace graphconsoleapp
       // Console.WriteLine("\nGraph Request:");
       // Console.WriteLine(requestAllGroups.GetHttpRequestMessage().RequestUri);
 
-      var groupId = "c70f8887-a2a4-4835-b702-1f87580f8bac";
+      var groupId = "097c804b-4c79-41e4-8ce1-23ec1dabea1f";
 
       // request 2 - one group
       // Console.WriteLine("\n\nREQUEST 2 - ONE GROUP:");

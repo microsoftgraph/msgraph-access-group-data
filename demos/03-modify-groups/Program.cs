@@ -86,13 +86,14 @@ namespace graphconsoleapp
       var additionalData = new Dictionary<string, object>();
       additionalData.Add("owners@odata.bind",
         new string[] {
-          "https://graph.microsoft.com/v1.0/users/3f8f64d5-961f-4067-9f3e-8f5cdcf1b0df"
+          "https://graph.microsoft.com/v1.0/users/94b28744-085e-4cb0-b841-4a6f367044ab"
         }
       );
       additionalData.Add("members@odata.bind",
         new string[] {
-          "https://graph.microsoft.com/v1.0/users/3f8f64d5-961f-4067-9f3e-8f5cdcf1b0df",
-          "https://graph.microsoft.com/v1.0/users/851f0875-e1c1-4c7e-bdec-3143bb3d4192"
+          "https://graph.microsoft.com/v1.0/users/94b28744-085e-4cb0-b841-4a6f367044ab",
+          "https://graph.microsoft.com/v1.0/users/6032b452-be33-4f26-9dcd-2aa7d8171d33",
+          "https://graph.microsoft.com/v1.0/users/8dcf031a-a7e0-4b6d-b509-d6a8c6577d16"
         }
       );
 
@@ -110,6 +111,7 @@ namespace graphconsoleapp
       var requestNewGroup = client.Groups.Request();
       return await requestNewGroup.AddAsync(group);
     }
+
     private static IConfigurationRoot? LoadAppSettings()
     {
       try
