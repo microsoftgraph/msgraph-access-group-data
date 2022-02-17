@@ -23,7 +23,7 @@ The lab for this module is available in multiple units within the associated Mic
 ## Demos
 
 1. [Working with groups in the organization](./demos/01-working-groups)
-1. [WUsers and their groups](./demos/02-users-groups)
+1. [Users and their groups](./demos/02-users-groups)
 1. [Manage group lifecycle](./demos/03-modify-groups)
 
 ## Watch the module
@@ -42,6 +42,7 @@ This module has been recorded and is available in the Office Development YouTube
 
 | Version |        Date        |            Comments            |
 | ------- | ------------------ | ------------------------------ |
+| 1.10    | March 1, 2022      | FY2022Q3 content refresh       |
 | 1.9     | December 8, 2021   | FY2022Q2 content refresh       |
 | 1.8     | September 13, 2021 | FY2022Q1 content refresh       |
 | 1.7     | May 26, 2021       | Refresh slides to new template |
