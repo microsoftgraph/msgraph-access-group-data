@@ -3,7 +3,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Security;
+using System.Threading.Tasks;
 using Microsoft.Identity.Client;
 using Microsoft.Graph;
 using Microsoft.Extensions.Configuration;
@@ -16,8 +20,6 @@ namespace graphconsoleapp
   {
     public static void Main(string[] args)
     {
-      Console.WriteLine("Hello World!");
-
       var config = LoadAppSettings();
       if (config == null)
       {
@@ -25,10 +27,10 @@ namespace graphconsoleapp
         return;
       }
 
-      var userName = ReadUsername();
-      var userPassword = ReadPassword();
+      var client = GetAuthenticatedGraphClient(config);
 
-      var client = GetAuthenticatedGraphClient(config, userName, userPassword);
+      var profileResponse = client.Me.Request().GetAsync().Result;
+      Console.WriteLine("Hello " + profileResponse.DisplayName);
 
       // request 1 - create new group
       // Console.WriteLine("\n\nREQUEST 1 - CREATE A GROUP:");
@@ -86,14 +88,14 @@ namespace graphconsoleapp
       var additionalData = new Dictionary<string, object>();
       additionalData.Add("owners@odata.bind",
         new string[] {
-          "https://graph.microsoft.com/v1.0/users/94b28744-085e-4cb0-b841-4a6f367044ab"
+          "https://graph.microsoft.com/v1.0/users/765f21db-e0e2-4b04-9a60-27e649e312dd"
         }
       );
       additionalData.Add("members@odata.bind",
         new string[] {
-          "https://graph.microsoft.com/v1.0/users/94b28744-085e-4cb0-b841-4a6f367044ab",
-          "https://graph.microsoft.com/v1.0/users/6032b452-be33-4f26-9dcd-2aa7d8171d33",
-          "https://graph.microsoft.com/v1.0/users/8dcf031a-a7e0-4b6d-b509-d6a8c6577d16"
+          "https://graph.microsoft.com/v1.0/users/765f21db-e0e2-4b04-9a60-27e649e312dd",
+          "https://graph.microsoft.com/v1.0/users/6e025b0b-cc3c-4a2b-b9f6-4d8e85f55bde",
+          "https://graph.microsoft.com/v1.0/users/4116a6cd-afb3-4306-88b0-b25ff108bc74"
         }
       );
 
@@ -135,52 +137,26 @@ namespace graphconsoleapp
       }
     }
 
-    private static IAuthenticationProvider CreateAuthorizationProvider(IConfigurationRoot config, string userName, SecureString userPassword)
+    private static IAuthenticationProvider CreateAuthorizationProvider(IConfigurationRoot config)
     {
       var clientId = config["applicationId"];
       var authority = $"https://login.microsoftonline.com/{config["tenantId"]}/v2.0";
 
       List<string> scopes = new List<string>();
-      scopes.Add("User.Read");
-      scopes.Add("Group.ReadWrite.All");
+      scopes.Add("https://graph.microsoft.com/.default");
 
       var cca = PublicClientApplicationBuilder.Create(clientId)
                                               .WithAuthority(authority)
+                                              .WithDefaultRedirectUri()
                                               .Build();
-      return MsalAuthenticationProvider.GetInstance(cca, scopes.ToArray(), userName, userPassword);
+      return MsalAuthenticationProvider.GetInstance(cca, scopes.ToArray());
     }
 
-    private static GraphServiceClient GetAuthenticatedGraphClient(IConfigurationRoot config, string userName, SecureString userPassword)
+    private static GraphServiceClient GetAuthenticatedGraphClient(IConfigurationRoot config)
     {
-      var authenticationProvider = CreateAuthorizationProvider(config, userName, userPassword);
+      var authenticationProvider = CreateAuthorizationProvider(config);
       var graphClient = new GraphServiceClient(authenticationProvider);
       return graphClient;
-    }
-
-    private static SecureString ReadPassword()
-    {
-      Console.WriteLine("Enter your password");
-      SecureString password = new SecureString();
-      while (true)
-      {
-        ConsoleKeyInfo c = Console.ReadKey(true);
-        if (c.Key == ConsoleKey.Enter)
-        {
-          break;
-        }
-        password.AppendChar(c.KeyChar);
-        Console.Write("*");
-      }
-      Console.WriteLine();
-      return password;
-    }
-
-    private static string ReadUsername()
-    {
-      string? username;
-      Console.WriteLine("Enter your username");
-      username = Console.ReadLine();
-      return username ?? "";
     }
   }
 }
